@@ -1,5 +1,7 @@
 # Running in a Development Environment
 
+This project uses `pnpm` as the package manager to take advantage of improved performance and package storage when compare to `npm`.
+
 ### Start the server
 
 ```bash
