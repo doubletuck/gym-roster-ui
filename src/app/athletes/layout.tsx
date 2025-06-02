@@ -1,14 +1,7 @@
-export default function AthletesLayout({
-    children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AthletesLayout({ children }: { children: React.ReactNode }) {
   return (
     <section>
-      <div className="container-fluid">
-      <h2>Athletes</h2>
-      {children}
-      </div>
+      <div>{children}</div>
     </section>
-  )
+  );
 }
