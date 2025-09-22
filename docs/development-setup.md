@@ -9,6 +9,7 @@ This document provides information setting up an environment, tools, and configu
 - [Install Homebrew](#install-homebrew)
 - [Install Node.js](#install-nodejs)
 - [Install pnpm](#install-pnpm)
+- [Versions being used](#versions-being-used)
 
 ## Required Software
 
@@ -37,3 +38,8 @@ Next.js recommends using pnpm as the package manager because it is faster and mo
 ```shell
 npm install -g pnpm
 ```
+
+## Versions being used
+
+- Node.js: v23.11.0
+- pnpm: v10.17.0

@@ -1,8 +1,6 @@
-const config = {
+module.exports = {
   plugins: {
-    '@tailwindcss/postcss': {},
+    tailwindcss: {},
+    autoprefixer: {},
   },
 };
-export default config;
-// This configuration file sets up PostCSS to use Tailwind CSS as a plugin.
-// It specifies that Tailwind CSS should be used to process styles in the project.
