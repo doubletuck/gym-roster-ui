@@ -6,6 +6,7 @@ import { Athlete, PaginatedResponse } from '@/lib/definitions';
 export default function Page() {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +15,7 @@ export default function Page() {
       setLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page}&size=25`
+          `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page - 1}&size=${pageSize}`
         );
         const data: PaginatedResponse<Athlete> = await response.json();
         setAthletes(data.content);
