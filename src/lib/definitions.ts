@@ -9,18 +9,24 @@ export type Athlete = {
 };
 
 export type PaginatedResponse<T> = {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
-  last: boolean;
-  sort: {
-    sorted: boolean;
-    unsorted: boolean;
-    empty: boolean;
+  _embedded?: {
+    content: T[];
   };
+  _links: {
+    self: Link;
+    first: Link;
+    last: Link;
+    next?: Link;
+    prev?: Link;
+  };
+  page: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
+};
+
+export type Link = {
+  href: string;
 };

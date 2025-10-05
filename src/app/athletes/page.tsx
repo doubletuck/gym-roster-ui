@@ -18,8 +18,8 @@ export default function Page() {
           `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page - 1}&size=${pageSize}`
         );
         const data: PaginatedResponse<Athlete> = await response.json();
-        setAthletes(data.content);
-        setTotalPages(data.totalPages);
+        setAthletes(data._embedded?.content || []);
+        setTotalPages(data.page.totalPages);
       } catch (error) {
         console.error('Error fetching athletes:', error);
       } finally {
