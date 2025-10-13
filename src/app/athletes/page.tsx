@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Athlete, PaginatedResponse } from '@/lib/definitions';
+import Pagination from '@/components/Pagination';
 
 export default function Page() {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
@@ -33,25 +34,12 @@ export default function Page() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Athletes</h1>
-      <div className="mb-4">
-        <button
-          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-        >
-          Previous
-        </button>
-        <span>
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-blue-500 text-white rounded ml-2"
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        className="mb-4"
+      />
 
       {loading && <p>Loading athletes...</p>}
       {!loading && athletes.length === 0 && <p>No athletes found.</p>}
