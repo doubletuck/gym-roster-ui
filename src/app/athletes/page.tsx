@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Athlete, PaginatedResponse } from '@/lib/definitions';
 import Pagination from '@/components/Pagination';
+import Link from 'next/link';
 
 export default function Page() {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
@@ -65,7 +66,12 @@ export default function Page() {
             {athletes.map(athlete => (
               <tr key={athlete.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {athlete.firstName} {athlete.lastName}
+                  <Link
+                    href={`/athletes/${athlete.id}`}
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                  >
+                    {athlete.firstName} {athlete.lastName}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {athlete.homeCity}
