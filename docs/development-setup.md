@@ -9,7 +9,6 @@ This document provides information setting up an environment, tools, and configu
 - [Install Homebrew](#install-homebrew)
 - [Install Node.js](#install-nodejs)
 - [Install pnpm](#install-pnpm)
-- [Versions being used](#versions-being-used)
 
 ## Required Software
 
@@ -25,21 +24,42 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Homebrew is a package manager for macOS. Go to the [Homebrew](https://brew.sh/) website for information on its installation.
 
-## Install Node.js
+## Install `fnm`, a node version manager
 
 ```shell
-brew install node
+brew install fnm
+```
+
+## Configure your shell to use `fnm`
+
+#### Add fnm to your ~/.zshrc
+
+```
+eval "$(fnm env)"
+```
+
+#### Reload your shell
+
+```shell
+source ~/.zshrc
+```
+
+#### Install Node via fnm
+
+```shell
+fnm install 24
+```
+
+## Create `.node-version` file
+
+```shell
+echo "24" > .node-version
 ```
 
 ## Install pnpm
 
-Next.js recommends using pnpm as the package manager because it is faster and more efficient than npm or yarn.
+Next.js recommends using pnpm as the package manager because it is faster and more efficient than npm or yarn. The instructions below use Corepack (which is integrated into Node 24+) to install pnpm.
 
 ```shell
-npm install -g pnpm
+npm install -g pnpm@10.27.0
 ```
-
-## Versions being used
-
-- Node.js: v23.11.0
-- pnpm: v10.17.0
