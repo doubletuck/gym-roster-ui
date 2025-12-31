@@ -1,4 +1,4 @@
-name: Validate Build
+name: Validate
 
 on:
   pull_request:
@@ -16,17 +16,11 @@ jobs:
         with:
           node-version-file: .node-version
 
-      - name: Enable Corepack
+      - name: Enable corepack
         run: corepack enable
-
-      - name: Prepare pnpm
-        run: corepack prepare pnpm@10.27.0 --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Build
-        run: pnpm build
+      - name: Run tests
+        run: pnpm test -- --run
