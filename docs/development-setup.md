@@ -47,13 +47,13 @@ source ~/.zshrc
 #### Install Node via fnm
 
 ```shell
-fnm install 24
+fnm install 24.12.0
 ```
 
 ## Create `.node-version` file
 
 ```shell
-echo "24" > .node-version
+echo "24.12.0" > .node-version
 ```
 
 ## Install pnpm
@@ -61,5 +61,6 @@ echo "24" > .node-version
 Next.js recommends using pnpm as the package manager because it is faster and more efficient than npm or yarn. The instructions below use Corepack (which is integrated into Node 24+) to install pnpm.
 
 ```shell
-npm install -g pnpm@10.27.0
+corepack enable
+corepack prepare pnpm@10.27.0 --activate
 ```
