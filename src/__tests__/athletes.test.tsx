@@ -1,23 +1,21 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
+import { server } from '@/__mocks__/server';
 import Page from '@/app/athletes/page';
 
-// Mock next/link
 vi.mock('next/link', () => ({
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
 }));
 
 describe('Athletes Page', () => {
   beforeEach(() => {
-    // Set environment variable for test
     process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL = 'http://localhost:3000';
   });
 
   it('should fetch and display athletes', async () => {
     render(<Page />);
 
-    // Wait for athletes to be displayed
-    // Using regex to match partial text since names can be split across elements
     await waitFor(() => {
       expect(screen.getByText(/John/)).toBeInTheDocument();
     });
@@ -32,7 +30,6 @@ describe('Athletes Page', () => {
 
     expect(screen.getByText('Loading athletes...')).toBeInTheDocument();
 
-    // Wait for loading to finish
     await waitFor(() => {
       expect(screen.queryByText('Loading athletes...')).not.toBeInTheDocument();
     });
@@ -45,14 +42,20 @@ describe('Athletes Page', () => {
       expect(screen.getByText(/John/)).toBeInTheDocument();
     });
 
-    // Verify table structure
-    const table = screen.getByRole('table');
-    expect(table).toBeInTheDocument();
-
-    // Verify table headers
+    expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
     expect(screen.getByText('Home Location')).toBeInTheDocument();
     expect(screen.getByText('Home Country')).toBeInTheDocument();
     expect(screen.getByText('Club Name')).toBeInTheDocument();
+  });
+
+  it('should display error message when fetch fails', async () => {
+    server.use(http.get('http://localhost:3000/athlete', () => HttpResponse.error()));
+
+    render(<Page />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Failed to load athletes')).toBeInTheDocument();
+    });
   });
 });
