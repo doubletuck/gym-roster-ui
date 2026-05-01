@@ -45,9 +45,9 @@ export const handlers = [
     });
   }),
 
-  http.get(`${API_BASE_URL}/athlete/:id`, ({ params }) => {
+  http.get(`${API_BASE_URL}/athlete/:id`, () => {
     return HttpResponse.json({
-      id: params.id,
+      id: '1',
       firstName: 'John',
       lastName: 'Doe',
       homeCity: 'New York',

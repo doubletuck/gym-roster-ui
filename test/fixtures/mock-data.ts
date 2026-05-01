@@ -1,4 +1,4 @@
-const athletes = [
+export const athletes = [
   {
     id: 'a987c5ad-106c-4817-ba70-67699fc607f1',
     firstName: 'Mati',
@@ -36,5 +36,3 @@ const athletes = [
     clubName: 'San Mateo Gymnastics',
   },
 ];
-
-export default athletes;

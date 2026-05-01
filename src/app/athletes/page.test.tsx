@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { server } from '@/__mocks__/server';
-import Page from '@/app/athletes/page';
+import { server } from '@test/fixtures/server';
+import Page from './page';
 
 vi.mock('next/link', () => ({
   default: ({ children, href }: any) => <a href={href}>{children}</a>,

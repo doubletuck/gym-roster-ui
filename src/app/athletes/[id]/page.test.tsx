@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { server } from '@/__mocks__/server';
-import AthleteDetail from '@/app/athletes/[id]/page';
+import { server } from '@test/fixtures/server';
+import AthleteDetail from './page';
 
 vi.mock('next/navigation', () => ({
   useParams: () => ({ id: '1' }),
