@@ -1,6 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { Athlete } from '@/lib/definitions';
 import { useParams } from 'next/navigation';
 
@@ -33,31 +39,57 @@ export default function AthleteDetail() {
     loadAthlete();
   }, [id]);
 
-  if (loading) return <div className="p-6">Loading athlete details...</div>;
-  if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!athlete) return <div className="p-6">Athlete not found</div>;
+  if (loading) {
+    return (
+      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <CircularProgress size={20} />
+        <Typography>Loading athlete details...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
+
+  if (!athlete) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Typography>Athlete not found</Typography>
+      </Box>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
         {athlete.firstName} {athlete.lastName}
-      </h1>
-
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Home Location</h2>
-            <p className="mt-1">
-              {athlete.homeCity}
-              {athlete.homeState ? `, ${athlete.homeState}` : ''}, {athlete.homeCountry}
-            </p>
-          </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Club Name</h2>
-            <p className="mt-1">{athlete.clubName}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+      </Typography>
+      <Card>
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Home Location
+              </Typography>
+              <Typography>
+                {athlete.homeCity}
+                {athlete.homeState ? `, ${athlete.homeState}` : ''}, {athlete.homeCountry}
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Club Name
+              </Typography>
+              <Typography>{athlete.clubName}</Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

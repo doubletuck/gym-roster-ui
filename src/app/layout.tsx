@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import ThemeRegistry from '@/components/ThemeRegistry';
 import './globals.css';
 
 export default function RootLayout({
@@ -14,8 +15,10 @@ export default function RootLayout({
         <title>Gym Roster</title>
       </head>
       <body>
-        <Header />
-        <main>{children}</main>
+        <ThemeRegistry>
+          <Header />
+          <main>{children}</main>
+        </ThemeRegistry>
       </body>
     </html>
   );
