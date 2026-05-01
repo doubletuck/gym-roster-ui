@@ -1,43 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Athlete } from '@/lib/definitions';
 import { useParams } from 'next/navigation';
+import { useAthlete } from '@/lib/hooks/useAthlete';
 
 export default function AthleteDetail() {
   const { id } = useParams();
-  const [athlete, setAthlete] = useState<Athlete | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadAthlete = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete/${id}`
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch athlete');
-        }
-        const data = await response.json();
-        setAthlete(data);
-      } catch (error) {
-        console.error('Error fetching athlete:', error);
-        setError('Failed to load athlete details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAthlete();
-  }, [id]);
+  const { athlete, loading, error } = useAthlete(id as string);
 
   if (loading) {
     return (

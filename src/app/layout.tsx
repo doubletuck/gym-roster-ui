@@ -1,3 +1,4 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import Header from '@/components/Header';
 import ThemeRegistry from '@/components/ThemeRegistry';
 import './globals.css';
@@ -15,10 +16,12 @@ export default function RootLayout({
         <title>Gym Roster</title>
       </head>
       <body>
-        <ThemeRegistry>
-          <Header />
-          <main>{children}</main>
-        </ThemeRegistry>
+        <AppRouterCacheProvider>
+          <ThemeRegistry>
+            <Header />
+            <main>{children}</main>
+          </ThemeRegistry>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

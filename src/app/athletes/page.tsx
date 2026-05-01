@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Table from '@mui/material/Table';
@@ -11,35 +11,14 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import MuiLink from '@mui/material/Link';
 import Link from 'next/link';
-import { Athlete, PaginatedResponse } from '@/lib/definitions';
 import Pagination from '@/components/Pagination';
+import { useAthletes } from '@/lib/hooks/useAthletes';
+
+const PAGE_SIZE = 10;
 
 export default function Page() {
-  const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const loadAthletes = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page - 1}&size=${pageSize}`
-        );
-        const data: PaginatedResponse<Athlete> = await response.json();
-        setAthletes(data._embedded?.content || []);
-        setTotalPages(data.page.totalPages);
-      } catch (error) {
-        console.error('Error fetching athletes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAthletes();
-  }, [page, pageSize]);
+  const { athletes, totalPages, loading, error } = useAthletes(page, PAGE_SIZE);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -56,8 +35,9 @@ export default function Page() {
           <Typography>Loading athletes...</Typography>
         </Box>
       )}
-      {!loading && athletes.length === 0 && <Typography>No athletes found.</Typography>}
-      {!loading && athletes.length > 0 && (
+      {!loading && error && <Typography color="error">{error}</Typography>}
+      {!loading && !error && athletes.length === 0 && <Typography>No athletes found.</Typography>}
+      {!loading && !error && athletes.length > 0 && (
         <Table>
           <TableHead>
             <TableRow>

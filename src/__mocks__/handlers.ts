@@ -44,4 +44,16 @@ export const handlers = [
       },
     });
   }),
+
+  http.get(`${API_BASE_URL}/athlete/:id`, ({ params }) => {
+    return HttpResponse.json({
+      id: params.id,
+      firstName: 'John',
+      lastName: 'Doe',
+      homeCity: 'New York',
+      homeState: 'NY',
+      homeCountry: 'USA',
+      clubName: 'NYC Gym',
+    });
+  }),
 ];
