@@ -19,6 +19,7 @@ export const handlers = [
             homeState: 'NY',
             homeCountry: 'USA',
             clubName: 'NYC Gym',
+            rosters: [],
           },
           {
             id: '2',
@@ -28,6 +29,7 @@ export const handlers = [
             homeState: 'CA',
             homeCountry: 'USA',
             clubName: 'LA Fitness',
+            rosters: [],
           },
         ],
       },
@@ -54,6 +56,22 @@ export const handlers = [
       homeState: 'NY',
       homeCountry: 'USA',
       clubName: 'NYC Gym',
+      rosters: [
+        {
+          collegeCodeName: 'NYU',
+          collegeShortName: 'NYU',
+          collegeLongName: 'New York University',
+          seasonYear: 2023,
+          academicYear: 'FR',
+        },
+        {
+          collegeCodeName: 'NYU',
+          collegeShortName: 'NYU',
+          collegeLongName: 'New York University',
+          seasonYear: 2024,
+          academicYear: 'SO',
+        },
+      ],
     });
   }),
 ];

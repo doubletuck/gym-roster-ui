@@ -5,7 +5,7 @@ export async function fetchAthletes(
   size: number
 ): Promise<PaginatedResponse<Athlete>> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page}&size=${size}`
+    `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page}&size=${size}&sort=lastName,asc&sort=firstName,asc`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch athletes');
