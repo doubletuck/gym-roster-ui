@@ -81,16 +81,16 @@ export default function AthleteDetail() {
             <TableHead>
               <TableRow>
                 <TableCell>Season</TableCell>
-                <TableCell>College</TableCell>
                 <TableCell>Academic Year</TableCell>
+                <TableCell>College</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {sortedRosters.map(roster => (
                 <TableRow key={`${roster.collegeCodeName}-${roster.seasonYear}`}>
                   <TableCell>{roster.seasonYear}</TableCell>
-                  <TableCell>{roster.collegeShortName}</TableCell>
                   <TableCell>{roster.academicYear}</TableCell>
+                  <TableCell>{roster.collegeShortName}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

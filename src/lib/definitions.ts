@@ -1,4 +1,4 @@
-export type RosterEntry = {
+export type AthleteRoster = {
   collegeCodeName: string;
   collegeShortName: string;
   collegeLongName: string;
@@ -16,7 +16,7 @@ export type Athlete = {
   clubName: string;
   creationTimestamp?: string;
   lastUpdateTimestamp?: string;
-  rosters: RosterEntry[];
+  rosters: AthleteRoster[];
 };
 
 export type PaginatedResponse<T> = {
