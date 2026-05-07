@@ -86,6 +86,10 @@ describe('Athletes Page', () => {
     expect(screen.getByText('Home Location')).toBeInTheDocument();
     expect(screen.getByText('Home Country')).toBeInTheDocument();
     expect(screen.getByText('Club Name')).toBeInTheDocument();
+    expect(screen.getByText('College Team(s)')).toBeInTheDocument();
+    // John Doe has two NYU roster entries — should appear once
+    expect(screen.getAllByText('NYU')).toHaveLength(1);
+    expect(screen.getByText('UCLA')).toBeInTheDocument();
   });
 
   it('should navigate with q param when search button is clicked', () => {

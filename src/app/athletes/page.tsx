@@ -131,6 +131,7 @@ function AthletesPage() {
                 <TableCell>Home Location</TableCell>
                 <TableCell>Home Country</TableCell>
                 <TableCell>Club Name</TableCell>
+                <TableCell>College Team(s)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -147,6 +148,13 @@ function AthletesPage() {
                   </TableCell>
                   <TableCell>{athlete.homeCountry}</TableCell>
                   <TableCell>{athlete.clubName}</TableCell>
+                  <TableCell>
+                    {[
+                      ...new Map(
+                        athlete.rosters.map(r => [r.collegeCodeName, r.collegeShortName])
+                      ).values(),
+                    ].join(', ')}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
