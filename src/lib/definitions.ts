@@ -1,3 +1,11 @@
+export type AthleteRoster = {
+  collegeCodeName: string;
+  collegeShortName: string;
+  collegeLongName: string;
+  seasonYear: number;
+  academicYear: string;
+};
+
 export type Athlete = {
   id: string;
   firstName: string;
@@ -6,6 +14,9 @@ export type Athlete = {
   homeState: string;
   homeCountry: string;
   clubName: string;
+  creationTimestamp?: string;
+  lastUpdateTimestamp?: string;
+  rosters: AthleteRoster[];
 };
 
 export type PaginatedResponse<T> = {

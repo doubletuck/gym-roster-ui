@@ -19,6 +19,22 @@ export const handlers = [
             homeState: 'NY',
             homeCountry: 'USA',
             clubName: 'NYC Gym',
+            rosters: [
+              {
+                collegeCodeName: 'NYU',
+                collegeShortName: 'NYU',
+                collegeLongName: 'New York University',
+                seasonYear: 2023,
+                academicYear: 'FR',
+              },
+              {
+                collegeCodeName: 'NYU',
+                collegeShortName: 'NYU',
+                collegeLongName: 'New York University',
+                seasonYear: 2024,
+                academicYear: 'SO',
+              },
+            ],
           },
           {
             id: '2',
@@ -28,6 +44,15 @@ export const handlers = [
             homeState: 'CA',
             homeCountry: 'USA',
             clubName: 'LA Fitness',
+            rosters: [
+              {
+                collegeCodeName: 'UCLA',
+                collegeShortName: 'UCLA',
+                collegeLongName: 'University of California, Los Angeles',
+                seasonYear: 2024,
+                academicYear: 'JR',
+              },
+            ],
           },
         ],
       },
@@ -45,15 +70,31 @@ export const handlers = [
     });
   }),
 
-  http.get(`${API_BASE_URL}/athlete/:id`, ({ params }) => {
+  http.get(`${API_BASE_URL}/athlete/:id`, () => {
     return HttpResponse.json({
-      id: params.id,
+      id: '1',
       firstName: 'John',
       lastName: 'Doe',
       homeCity: 'New York',
       homeState: 'NY',
       homeCountry: 'USA',
       clubName: 'NYC Gym',
+      rosters: [
+        {
+          collegeCodeName: 'NYU',
+          collegeShortName: 'NYU',
+          collegeLongName: 'New York University',
+          seasonYear: 2023,
+          academicYear: 'FR',
+        },
+        {
+          collegeCodeName: 'NYU',
+          collegeShortName: 'NYU',
+          collegeLongName: 'New York University',
+          seasonYear: 2024,
+          academicYear: 'SO',
+        },
+      ],
     });
   }),
 ];

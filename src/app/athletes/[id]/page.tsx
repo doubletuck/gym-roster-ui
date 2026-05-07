@@ -5,6 +5,11 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import { useParams } from 'next/navigation';
 import { useAthlete } from '@/lib/hooks/useAthlete';
@@ -38,6 +43,8 @@ export default function AthleteDetail() {
     );
   }
 
+  const sortedRosters = [...athlete.rosters].sort((a, b) => b.seasonYear - a.seasonYear);
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -64,6 +71,32 @@ export default function AthleteDetail() {
           </Grid>
         </CardContent>
       </Card>
+
+      {sortedRosters.length > 0 && (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Roster History
+          </Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Season</TableCell>
+                <TableCell>Academic Year</TableCell>
+                <TableCell>College</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {sortedRosters.map(roster => (
+                <TableRow key={`${roster.collegeCodeName}-${roster.seasonYear}`}>
+                  <TableCell>{roster.seasonYear}</TableCell>
+                  <TableCell>{roster.academicYear}</TableCell>
+                  <TableCell>{roster.collegeShortName}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      )}
     </Box>
   );
 }
