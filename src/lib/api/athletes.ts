@@ -1,12 +1,20 @@
 import { Athlete, PaginatedResponse } from '@/lib/definitions';
 
+export type AthleteFilters = {
+  q?: string;
+  seasonYear?: number;
+};
+
 export async function fetchAthletes(
   page: number,
-  size: number
+  size: number,
+  filters: AthleteFilters = {}
 ): Promise<PaginatedResponse<Athlete>> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page}&size=${size}&sort=lastName,asc&sort=firstName,asc`
-  );
+  let url = `${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete?page=${page}&size=${size}&sort=lastName,asc&sort=firstName,asc`;
+  if (filters.q) url += `&q=${encodeURIComponent(filters.q)}`;
+  if (filters.seasonYear != null) url += `&seasonYear=${filters.seasonYear}`;
+
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch athletes');
   }

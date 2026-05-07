@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAthletes } from '@/lib/api/athletes';
+import { fetchAthletes, AthleteFilters } from '@/lib/api/athletes';
 import { Athlete } from '@/lib/definitions';
 
 type UseAthletesResult = {
@@ -9,20 +9,27 @@ type UseAthletesResult = {
   error: string | null;
 };
 
-export function useAthletes(page: number, size: number): UseAthletesResult {
+export function useAthletes(
+  page: number,
+  size: number,
+  filters: AthleteFilters = {},
+  enabled: boolean = true
+): UseAthletesResult {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
+
     let cancelled = false;
 
     const load = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchAthletes(page - 1, size);
+        const data = await fetchAthletes(page - 1, size, filters);
         if (!cancelled) {
           setAthletes(data._embedded?.content ?? []);
           setTotalPages(data.page.totalPages);
@@ -42,7 +49,7 @@ export function useAthletes(page: number, size: number): UseAthletesResult {
     return () => {
       cancelled = true;
     };
-  }, [page, size]);
+  }, [page, size, enabled, filters.q, filters.seasonYear]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { athletes, totalPages, loading, error };
 }
