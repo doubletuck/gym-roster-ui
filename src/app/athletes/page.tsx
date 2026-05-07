@@ -130,8 +130,8 @@ function AthletesPage() {
                 <TableCell>Name</TableCell>
                 <TableCell>Home Location</TableCell>
                 <TableCell>Home Country</TableCell>
-                <TableCell>Club Name</TableCell>
                 <TableCell>College Team(s)</TableCell>
+                <TableCell>Club Name</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -147,7 +147,6 @@ function AthletesPage() {
                     {athlete.homeState ? `, ${athlete.homeState}` : ''}
                   </TableCell>
                   <TableCell>{athlete.homeCountry}</TableCell>
-                  <TableCell>{athlete.clubName}</TableCell>
                   <TableCell>
                     {[
                       ...new Map(
@@ -155,6 +154,7 @@ function AthletesPage() {
                       ).values(),
                     ].join(', ')}
                   </TableCell>
+                  <TableCell>{athlete.clubName}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
