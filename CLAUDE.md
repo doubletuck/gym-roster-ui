@@ -22,13 +22,13 @@ Frontend for the GymRoster application. Displays college women's gymnastics data
 
 The athlete list endpoint supports optional filter query params: `firstName`, `lastName`, `homeCity`, `homeState`, `homeCountry`, `clubName`, `collegeCodeName`, `seasonYear`, `academicYear`. See the backend API docs at `/Users/evie/Development/gym-roster/docs/api/api-athlete.md` for full details.
 
-Both athlete endpoints return `AthleteDto`, which includes a `rosters` array of `AthleteRoster` objects. Meet data is currently import-only (no GET endpoints).
+Both athlete endpoints return `AthleteDto`, which includes a `rosters` array of `AthleteRosterEntry` objects. Meet data is currently import-only (no GET endpoints).
 
 ### Domain Field Reference
 
-**Athlete** (`AthleteDto`): `id`, `firstName`, `lastName`, `homeCity`, `homeState` (State code e.g. `"NY"`), `homeCountry` (Country code e.g. `"USA"`), `clubName`, `creationTimestamp`, `lastUpdateTimestamp`, `rosters` (array of `AthleteRoster`)
+**Athlete** (`AthleteDto`): `id`, `firstName`, `lastName`, `homeCity`, `homeState` (State code e.g. `"NY"`), `homeCountry` (Country code e.g. `"USA"`), `clubName`, `creationTimestamp`, `lastUpdateTimestamp`, `rosters` (array of `AthleteRosterEntry`)
 
-**AthleteRoster**: `collegeCodeName`, `collegeShortName`, `collegeLongName`, `seasonYear` (number), `academicYear` (e.g. `"FR"`, `"SO"`, `"JR"`, `"SR"`)
+**AthleteRosterEntry**: `collegeCodeName`, `collegeShortName`, `collegeLongName`, `seasonYear` (number), `academicYear` (e.g. `"FR"`, `"SO"`, `"JR"`, `"SR"`)
 
 **College**: `id`, `codeName`, `shortName`, `longName`, `city`, `state`, `conference` (enum: ACC, BIG12, BIGTEN, EAGL, GEC, IND, MAC, MIC, MPSF, MW, NCGAEAST, PAC12, SEC, WIAC), `division` (enum: DIV1, DIV2, DIV3), `region` (enum: C, NC, NE, SC, SE, W, NA), `nickname`, `teamUrl`
 
@@ -85,6 +85,12 @@ test/
 - Tests are co-located with their page (e.g. `app/athletes/page.test.tsx`); new MSW handlers go in `test/fixtures/handlers.ts`
 - Each page should handle loading, error, and empty states
 
-## Keep Documentation Updated
+## Documentation
 
-Documentation should be updated to reflect any changes that occurred in the code.
+- Documentation should be updated to reflect any changes that occurred in the code.
+
+## Tests
+
+- When new capabilities are added tests should be created.
+- Tests should modified if the tests are no longer relevant after capabilities are modified.
+- After changes, tests should be run to ensure that no code was broken.
