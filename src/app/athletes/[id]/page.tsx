@@ -214,7 +214,7 @@ export default function AthleteDetail() {
                   onChange={e => setForm({ ...form, firstName: e.target.value })}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 40 }}
+                  slotProps={{ htmlInput: { maxLength: 40 } }}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -224,7 +224,7 @@ export default function AthleteDetail() {
                   onChange={e => setForm({ ...form, lastName: e.target.value })}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 40 }}
+                  slotProps={{ htmlInput: { maxLength: 40 } }}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -234,7 +234,7 @@ export default function AthleteDetail() {
                   onChange={e => setForm({ ...form, homeCity: e.target.value })}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 50 }}
+                  slotProps={{ htmlInput: { maxLength: 50 } }}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -243,7 +243,7 @@ export default function AthleteDetail() {
                   value={form.homeState}
                   onChange={e => setForm({ ...form, homeState: e.target.value })}
                   fullWidth
-                  inputProps={{ maxLength: 2 }}
+                  slotProps={{ htmlInput: { maxLength: 2 } }}
                   helperText="2-character state code (e.g. CA)"
                 />
               </Grid>
@@ -253,7 +253,7 @@ export default function AthleteDetail() {
                   value={form.homeCountry}
                   onChange={e => setForm({ ...form, homeCountry: e.target.value })}
                   fullWidth
-                  inputProps={{ maxLength: 3 }}
+                  slotProps={{ htmlInput: { maxLength: 3 } }}
                   helperText="3-character country code (e.g. USA)"
                 />
               </Grid>
@@ -263,7 +263,7 @@ export default function AthleteDetail() {
                   value={form.clubName}
                   onChange={e => setForm({ ...form, clubName: e.target.value })}
                   fullWidth
-                  inputProps={{ maxLength: 100 }}
+                  slotProps={{ htmlInput: { maxLength: 100 } }}
                 />
               </Grid>
             </Grid>
@@ -355,7 +355,7 @@ export default function AthleteDetail() {
                   value={rosterForm.seasonYear}
                   onChange={e => setRosterForm({ ...rosterForm, seasonYear: e.target.value })}
                   fullWidth
-                  inputProps={{ min: 1990, max: 2050 }}
+                  slotProps={{ htmlInput: { min: 1990, max: 2050 } }}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 3 }}>
