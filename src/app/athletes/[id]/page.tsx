@@ -7,6 +7,11 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -24,9 +29,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { updateAthlete } from '@/lib/api/athletes';
+import { updateAthlete, deleteAthlete } from '@/lib/api/athletes';
 import { createRosterEntry, deleteRosterEntry } from '@/lib/api/roster';
 import { useAthlete } from '@/lib/hooks/useAthlete';
 import { useColleges } from '@/lib/hooks/useColleges';
@@ -55,9 +60,12 @@ type Snackbar = { open: boolean; message: string; severity: 'success' | 'error' 
 
 export default function AthleteDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const { athlete, loading, error, refresh } = useAthlete(id as string);
 
   const [editMode, setEditMode] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -98,6 +106,18 @@ export default function AthleteDetail() {
   };
 
   const handleCancel = () => setEditMode(false);
+
+  const handleDeleteConfirm = async () => {
+    setDeleting(true);
+    try {
+      await deleteAthlete(id as string);
+      router.push('/athletes');
+    } catch {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+      showSnackbar('Failed to delete athlete', 'error');
+    }
+  };
 
   const handleSave = async () => {
     if (!form.firstName.trim() || !form.lastName.trim() || !form.homeCity.trim()) {
@@ -197,9 +217,19 @@ export default function AthleteDetail() {
             </Button>
           </Stack>
         ) : (
-          <Button variant="outlined" startIcon={<EditIcon />} onClick={handleEditClick}>
-            Edit
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              Delete
+            </Button>
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={handleEditClick}>
+              Edit
+            </Button>
+          </Stack>
         )}
       </Box>
 
@@ -399,6 +429,24 @@ export default function AthleteDetail() {
           </Box>
         )}
       </Box>
+
+      <Dialog open={deleteDialogOpen} onClose={() => !deleting && setDeleteDialogOpen(false)}>
+        <DialogTitle>Delete Athlete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete {athlete.firstName} {athlete.lastName}? This action
+            cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} disabled={deleting}>
+            Cancel
+          </Button>
+          <Button color="error" onClick={handleDeleteConfirm} disabled={deleting}>
+            {deleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}

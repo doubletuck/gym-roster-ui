@@ -4,13 +4,17 @@ import { http, HttpResponse } from 'msw';
 import { server } from '@test/fixtures/server';
 import AthleteDetail from './page';
 
+let mockPush: ReturnType<typeof vi.fn>;
+
 vi.mock('next/navigation', () => ({
   useParams: () => ({ id: '1' }),
+  useRouter: () => ({ push: mockPush }),
 }));
 
 describe('Athlete Detail Page', () => {
   beforeEach(() => {
     process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL = 'http://localhost:3000';
+    mockPush = vi.fn();
   });
 
   it('should fetch and display athlete details', async () => {
@@ -220,6 +224,93 @@ describe('Athlete Detail Page', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Failed to remove roster entry')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('delete athlete', () => {
+    it('should show Delete button in view mode', async () => {
+      render(<AthleteDetail />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+      });
+
+      expect(screen.getByRole('button', { name: /^delete$/i })).toBeInTheDocument();
+    });
+
+    it('should open confirmation dialog when Delete is clicked', async () => {
+      render(<AthleteDetail />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByText(/are you sure you want to delete john doe/i)).toBeInTheDocument();
+    });
+
+    it('should close dialog without deleting when Cancel is clicked', async () => {
+      render(<AthleteDetail />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
+      await screen.findByRole('dialog');
+
+      fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+      // MUI Dialog uses a CSS transition on exit; wait for it to fully unmount
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+      expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('should call DELETE /athlete/:id and navigate to /athletes on confirm', async () => {
+      let deleteCalled = false;
+      server.use(
+        http.delete('http://localhost:3000/athlete/:id', () => {
+          deleteCalled = true;
+          return new HttpResponse(null, { status: 204 });
+        })
+      );
+
+      render(<AthleteDetail />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
+      const dialog = await screen.findByRole('dialog');
+      // Use within() to target the Delete button inside the dialog, not the header button
+      fireEvent.click(within(dialog).getByRole('button', { name: /^delete$/i }));
+
+      await waitFor(() => {
+        expect(deleteCalled).toBe(true);
+        expect(mockPush).toHaveBeenCalledWith('/athletes');
+      });
+    });
+
+    it('should show error snackbar when delete fails', async () => {
+      server.use(http.delete('http://localhost:3000/athlete/:id', () => HttpResponse.error()));
+
+      render(<AthleteDetail />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
+      const dialog = await screen.findByRole('dialog');
+      // Use within() to target the Delete button inside the dialog, not the header button
+      fireEvent.click(within(dialog).getByRole('button', { name: /^delete$/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Failed to delete athlete')).toBeInTheDocument();
       });
     });
   });

@@ -39,3 +39,12 @@ export async function updateAthlete(id: string, data: AthleteUpdateRequest): Pro
     throw new Error('Failed to update athlete');
   }
 }
+
+export async function deleteAthlete(id: string): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete athlete');
+  }
+}

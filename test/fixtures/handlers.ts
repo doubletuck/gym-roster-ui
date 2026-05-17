@@ -113,4 +113,8 @@ export const handlers = [
   http.delete(`${API_BASE_URL}/roster/athlete/:id`, () => {
     return new HttpResponse(null, { status: 204 });
   }),
+
+  http.delete(`${API_BASE_URL}/athlete/:id`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];
