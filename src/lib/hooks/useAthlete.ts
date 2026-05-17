@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchAthlete } from '@/lib/api/athletes';
 import { Athlete } from '@/lib/definitions';
 
@@ -6,9 +6,11 @@ type UseAthleteResult = {
   athlete: Athlete | null;
   loading: boolean;
   error: string | null;
+  refresh: () => void;
 };
 
 export function useAthlete(id: string): UseAthleteResult {
+  const [refreshKey, setRefreshKey] = useState(0);
   const [athlete, setAthlete] = useState<Athlete | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +41,9 @@ export function useAthlete(id: string): UseAthleteResult {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, refreshKey]);
 
-  return { athlete, loading, error };
+  const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
+
+  return { athlete, loading, error, refresh };
 }
