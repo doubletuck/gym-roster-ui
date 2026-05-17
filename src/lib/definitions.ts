@@ -1,4 +1,5 @@
 export type AthleteRosterEntry = {
+  athleteRosterId: string;
   collegeCodeName: string;
   collegeShortName: string;
   collegeLongName: string;
@@ -7,7 +8,7 @@ export type AthleteRosterEntry = {
 };
 
 export type Athlete = {
-  id: string;
+  athleteId: string;
   firstName: string;
   lastName: string;
   homeCity: string;
