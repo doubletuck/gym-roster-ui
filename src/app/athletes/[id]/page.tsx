@@ -365,7 +365,7 @@ export default function AthleteDetail() {
             <Typography variant="subtitle1" gutterBottom>
               Add Roster Entry
             </Typography>
-            <Grid container spacing={2} alignItems="flex-start">
+            <Grid container spacing={2} sx={{ alignItems: 'flex-start' }}>
               <Grid size={{ xs: 12, md: 5 }}>
                 <Autocomplete
                   options={colleges}
