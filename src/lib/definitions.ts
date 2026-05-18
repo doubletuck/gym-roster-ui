@@ -1,4 +1,5 @@
-export type AthleteRoster = {
+export type AthleteRosterEntry = {
+  athleteRosterId: string;
   collegeCodeName: string;
   collegeShortName: string;
   collegeLongName: string;
@@ -6,8 +7,46 @@ export type AthleteRoster = {
   academicYear: string;
 };
 
+export type College = {
+  id: number;
+  codeName: string;
+  shortName: string;
+  longName: string;
+  city: string;
+  state: string;
+  conference: string;
+  division: string;
+  region: string;
+  nickname?: string;
+  teamUrl?: string;
+};
+
+export type CollegesPage = {
+  content: College[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+};
+
+export type AthleteUpdateRequest = {
+  firstName: string;
+  lastName: string;
+  homeCity: string;
+  homeState?: string;
+  homeCountry?: string;
+  clubName?: string;
+};
+
+export type AthleteRosterRequest = {
+  collegeId: number;
+  athleteId: number;
+  seasonYear: number;
+  academicYear: string;
+};
+
 export type Athlete = {
-  id: string;
+  athleteId: string;
   firstName: string;
   lastName: string;
   homeCity: string;
@@ -16,7 +55,7 @@ export type Athlete = {
   clubName: string;
   creationTimestamp?: string;
   lastUpdateTimestamp?: string;
-  rosters: AthleteRoster[];
+  rosters: AthleteRosterEntry[];
 };
 
 export type PaginatedResponse<T> = {

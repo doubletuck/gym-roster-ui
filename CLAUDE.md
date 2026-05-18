@@ -9,26 +9,29 @@ Frontend for the GymRoster application. Displays college women's gymnastics data
 
 ### API Endpoints and Response Shapes
 
-| Resource         | Endpoint                                                           | Notes                       |
-| ---------------- | ------------------------------------------------------------------ | --------------------------- |
-| Athletes (list)  | `GET /athlete?page=0&size=30&sort=lastName,asc&sort=firstName,asc` | Spring HATEOAS `PagedModel` |
-| Athlete (detail) | `GET /athlete/:id`                                                 | —                           |
-| Colleges (list)  | `GET /college?page=0&size=10`                                      | Spring `Page<T>`            |
-| College (detail) | `GET /college/:id`                                                 | —                           |
-| Coaches (list)   | `GET /coach?page=0&size=10`                                        | Spring `Page<T>`            |
-| Coach (detail)   | `GET /coach/:id`                                                   | —                           |
+| Resource              | Endpoint                                                           | Notes                                                                               |
+| --------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Athletes (list)       | `GET /athlete?page=0&size=30&sort=lastName,asc&sort=firstName,asc` | Spring HATEOAS `PagedModel`                                                         |
+| Athlete (detail)      | `GET /athlete/:id`                                                 | —                                                                                   |
+| Athlete (update)      | `PUT /athlete/:id`                                                 | Body: `AthleteUpdateRequest`; returns updated athlete without `rosters`             |
+| Colleges (list)       | `GET /college?page=0&size=300&sort=shortName,asc`                  | Spring `Page<T>`; fetched in bulk for college Autocomplete                          |
+| College (detail)      | `GET /college/:id`                                                 | —                                                                                   |
+| Coaches (list)        | `GET /coach?page=0&size=10`                                        | Spring `Page<T>`                                                                    |
+| Coach (detail)        | `GET /coach/:id`                                                   | —                                                                                   |
+| Roster entry (create) | `POST /roster/athlete`                                             | Body: `AthleteRosterRequest`; `academicYear` uses long enum codes (e.g. `FRESHMAN`) |
+| Roster entry (delete) | `DELETE /roster/athlete/:id`                                       | 204 No Content                                                                      |
 
 > **Important:** The athlete list uses Spring HATEOAS (`PagedModel`). Its JSON shape has `_embedded.content` for the items array and a `page` object for pagination metadata. The college and coach lists use plain Spring `Page<T>`, which puts `content` at the root alongside `totalPages`, `totalElements`, `size`, and `number`.
 
 The athlete list endpoint supports optional filter query params: `firstName`, `lastName`, `homeCity`, `homeState`, `homeCountry`, `clubName`, `collegeCodeName`, `seasonYear`, `academicYear`. See the backend API docs at `/Users/evie/Development/gym-roster/docs/api/api-athlete.md` for full details.
 
-Both athlete endpoints return `AthleteDto`, which includes a `rosters` array of `AthleteRoster` objects. Meet data is currently import-only (no GET endpoints).
+Both athlete endpoints return `AthleteDto`, which includes a `rosters` array of `AthleteRosterEntry` objects. Meet data is currently import-only (no GET endpoints).
 
 ### Domain Field Reference
 
-**Athlete** (`AthleteDto`): `id`, `firstName`, `lastName`, `homeCity`, `homeState` (State code e.g. `"NY"`), `homeCountry` (Country code e.g. `"USA"`), `clubName`, `creationTimestamp`, `lastUpdateTimestamp`, `rosters` (array of `AthleteRoster`)
+**Athlete** (`AthleteDto`): `id`, `firstName`, `lastName`, `homeCity`, `homeState` (State code e.g. `"NY"`), `homeCountry` (Country code e.g. `"USA"`), `clubName`, `creationTimestamp`, `lastUpdateTimestamp`, `rosters` (array of `AthleteRosterEntry`)
 
-**AthleteRoster**: `collegeCodeName`, `collegeShortName`, `collegeLongName`, `seasonYear` (number), `academicYear` (e.g. `"FR"`, `"SO"`, `"JR"`, `"SR"`)
+**AthleteRosterEntry**: `athleteRosterId`, `collegeCodeName`, `collegeShortName`, `collegeLongName`, `seasonYear` (number), `academicYear` (e.g. `"FR"`, `"SO"`, `"JR"`, `"SR"`) — note: GET responses return short codes; POST requests require long enum codes (`FRESHMAN`, `SOPHOMORE`, `JUNIOR`, `SENIOR`)
 
 **College**: `id`, `codeName`, `shortName`, `longName`, `city`, `state`, `conference` (enum: ACC, BIG12, BIGTEN, EAGL, GEC, IND, MAC, MIC, MPSF, MW, NCGAEAST, PAC12, SEC, WIAC), `division` (enum: DIV1, DIV2, DIV3), `region` (enum: C, NC, NE, SC, SE, W, NA), `nickname`, `teamUrl`
 
@@ -52,7 +55,7 @@ src/
       layout.tsx
       page.tsx              # Athletes list (paginated, sorted by lastName/firstName)
       page.test.tsx         # Athletes list tests
-      [id]/page.tsx         # Athlete detail (includes roster history)
+      [id]/page.tsx         # Athlete detail + inline edit mode (athlete info form, roster add/delete)
       [id]/page.test.tsx    # Athlete detail tests
   components/
     Header/index.tsx        # MUI AppBar navigation
@@ -61,9 +64,12 @@ src/
   lib/
     api/
       athletes.ts           # Fetch functions for athlete endpoints (pure async, no React)
+      colleges.ts           # fetchColleges — fetches full college list for Autocomplete
+      roster.ts             # createRosterEntry (POST /roster/athlete), deleteRosterEntry (DELETE /roster/athlete/:id)
     hooks/
-      useAthlete.ts         # Hook wrapping fetchAthlete — returns { athlete, loading, error }
+      useAthlete.ts         # Hook wrapping fetchAthlete — returns { athlete, loading, error, refresh }
       useAthletes.ts        # Hook wrapping fetchAthletes — returns { athletes, totalPages, loading, error }
+      useColleges.ts        # Hook wrapping fetchColleges — returns { colleges, loading, error }; accepts enabled flag
     definitions.ts          # Shared TypeScript types for API responses
 test/
   fixtures/
@@ -85,6 +91,12 @@ test/
 - Tests are co-located with their page (e.g. `app/athletes/page.test.tsx`); new MSW handlers go in `test/fixtures/handlers.ts`
 - Each page should handle loading, error, and empty states
 
-## Keep Documentation Updated
+## Documentation
 
-Documentation should be updated to reflect any changes that occurred in the code.
+- Documentation should be updated to reflect any changes that occurred in the code.
+
+## Tests
+
+- When new capabilities are added tests should be created.
+- Tests should modified if the tests are no longer relevant after capabilities are modified.
+- After changes, tests should be run to ensure that no code was broken.

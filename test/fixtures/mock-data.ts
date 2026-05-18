@@ -36,3 +36,30 @@ export const athletes = [
     clubName: 'San Mateo Gymnastics',
   },
 ];
+
+export const colleges = [
+  {
+    id: 1,
+    codeName: 'UCLA',
+    shortName: 'UCLA',
+    longName: 'University of California, Los Angeles',
+    city: 'Los Angeles',
+    state: 'CA',
+    conference: 'BIG_TEN',
+    division: 'DIV1',
+    region: 'W',
+    nickname: 'Bruins',
+  },
+  {
+    id: 2,
+    codeName: 'NYU',
+    shortName: 'NYU',
+    longName: 'New York University',
+    city: 'New York',
+    state: 'NY',
+    conference: 'EAGL',
+    division: 'DIV1',
+    region: 'NE',
+    nickname: 'Violets',
+  },
+];

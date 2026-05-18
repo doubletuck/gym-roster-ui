@@ -136,9 +136,13 @@ function AthletesPage() {
             </TableHead>
             <TableBody>
               {athletes.map(athlete => (
-                <TableRow key={athlete.id} hover>
+                <TableRow key={athlete.athleteId} hover>
                   <TableCell>
-                    <MuiLink component={Link} href={`/athletes/${athlete.id}`} underline="hover">
+                    <MuiLink
+                      component={Link}
+                      href={`/athletes/${athlete.athleteId}`}
+                      underline="hover"
+                    >
                       {athlete.firstName} {athlete.lastName}
                     </MuiLink>
                   </TableCell>
