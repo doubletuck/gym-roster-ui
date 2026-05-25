@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { colleges } from './mock-data';
+import { coaches, colleges } from './mock-data';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL || 'http://localhost:3000';
 
@@ -116,5 +116,28 @@ export const handlers = [
 
   http.delete(`${API_BASE_URL}/athlete/:id`, () => {
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.get(`${API_BASE_URL}/coach`, ({ request }) => {
+    const url = new URL(request.url);
+    const page = url.searchParams.get('page') || '0';
+    const size = url.searchParams.get('size') || '10';
+
+    return HttpResponse.json({
+      _embedded: {
+        content: coaches,
+      },
+      _links: {
+        self: { href: `/coach?page=${page}&size=${size}` },
+        first: { href: '/coach?page=0&size=10' },
+        last: { href: '/coach?page=0&size=10' },
+      },
+      page: {
+        size: parseInt(size as string),
+        totalElements: coaches.length,
+        totalPages: 1,
+        number: parseInt(page as string),
+      },
+    });
   }),
 ];

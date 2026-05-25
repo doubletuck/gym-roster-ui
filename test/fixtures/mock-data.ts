@@ -1,3 +1,36 @@
+export const coaches = [
+  {
+    coachId: '1',
+    firstName: 'Alex',
+    lastName: 'Rivera',
+    rosters: [
+      {
+        coachRosterId: '101',
+        collegeCodeName: 'UCLA',
+        collegeShortName: 'UCLA',
+        collegeLongName: 'University of California, Los Angeles',
+        seasonYear: 2024,
+        roleCode: 'HEAD_COACH',
+      },
+    ],
+  },
+  {
+    coachId: '2',
+    firstName: 'Sam',
+    lastName: 'Johnson',
+    rosters: [
+      {
+        coachRosterId: '102',
+        collegeCodeName: 'NYU',
+        collegeShortName: 'NYU',
+        collegeLongName: 'New York University',
+        seasonYear: 2024,
+        roleCode: 'ASSISTANT_COACH',
+      },
+    ],
+  },
+];
+
 export const athletes = [
   {
     id: 'a987c5ad-106c-4817-ba70-67699fc607f1',

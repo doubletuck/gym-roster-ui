@@ -9,7 +9,7 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Rosters', href: '/' },
   { label: 'Athletes', href: '/athletes' },
-  { label: 'Coaches', href: '/' },
+  { label: 'Coaches', href: '/coaches' },
   { label: 'Colleges', href: '/' },
 ];
 

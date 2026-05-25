@@ -1,3 +1,21 @@
+export type CoachRosterEntry = {
+  coachRosterId: string;
+  collegeCodeName: string;
+  collegeShortName: string;
+  collegeLongName: string;
+  seasonYear: number;
+  roleCode: string;
+};
+
+export type Coach = {
+  coachId: string;
+  firstName: string;
+  lastName: string;
+  creationTimestamp?: string;
+  lastUpdateTimestamp?: string;
+  rosters: CoachRosterEntry[];
+};
+
 export type AthleteRosterEntry = {
   athleteRosterId: string;
   collegeCodeName: string;
