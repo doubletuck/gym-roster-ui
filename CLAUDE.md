@@ -9,17 +9,19 @@ Frontend for the GymRoster application. Displays college women's gymnastics data
 
 ### API Endpoints and Response Shapes
 
-| Resource              | Endpoint                                                           | Notes                                                                                                       |
-| --------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Athletes (list)       | `GET /athlete?page=0&size=30&sort=lastName,asc&sort=firstName,asc` | Spring HATEOAS `PagedModel`                                                                                 |
-| Athlete (detail)      | `GET /athlete/:id`                                                 | —                                                                                                           |
-| Athlete (update)      | `PUT /athlete/:id`                                                 | Body: `AthleteUpdateRequest`; returns updated athlete without `rosters`                                     |
-| Colleges (list)       | `GET /college?page=0&size=300&sort=shortName,asc`                  | Spring `Page<T>`; fetched in bulk for college Autocomplete                                                  |
-| College (detail)      | `GET /college/:id`                                                 | —                                                                                                           |
-| Coaches (list)        | `GET /coach?page=0&size=10&sort=lastName,asc&sort=firstName,asc`   | Spring HATEOAS `PagedModel`; supports `q`, `firstName`, `lastName`, `collegeCodeName`, `seasonYear` filters |
-| Coach (detail)        | `GET /coach/:id`                                                   | —                                                                                                           |
-| Roster entry (create) | `POST /roster/athlete`                                             | Body: `AthleteRosterRequest`; `academicYear` uses long enum codes (e.g. `FRESHMAN`)                         |
-| Roster entry (delete) | `DELETE /roster/athlete/:id`                                       | 204 No Content                                                                                              |
+| Resource                | Endpoint                                                           | Notes                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Athletes (list)         | `GET /athlete?page=0&size=30&sort=lastName,asc&sort=firstName,asc` | Spring HATEOAS `PagedModel`                                                                                 |
+| Athlete (detail)        | `GET /athlete/:id`                                                 | —                                                                                                           |
+| Athlete (update)        | `PUT /athlete/:id`                                                 | Body: `AthleteUpdateRequest`; returns updated athlete without `rosters`                                     |
+| Colleges (list)         | `GET /college?page=0&size=300&sort=shortName,asc`                  | Spring `Page<T>`; fetched in bulk for college Autocomplete                                                  |
+| College (detail)        | `GET /college/:id`                                                 | —                                                                                                           |
+| Coaches (list)          | `GET /coach?page=0&size=10&sort=lastName,asc&sort=firstName,asc`   | Spring HATEOAS `PagedModel`; supports `q`, `firstName`, `lastName`, `collegeCodeName`, `seasonYear` filters |
+| Coach (detail)          | `GET /coach/:id`                                                   | —                                                                                                           |
+| Athlete roster (create) | `POST /roster/athlete`                                             | Body: `AthleteRosterRequest`; `academicYear` uses long enum codes (e.g. `FRESHMAN`)                         |
+| Athlete roster (delete) | `DELETE /roster/athlete/:id`                                       | 204 No Content                                                                                              |
+| Coach roster (create)   | `POST /roster/coach`                                               | Body: `CoachRosterRequest` — `{ college: {id}, seasonYear, coach: {id}, roleCode }`                         |
+| Coach roster (delete)   | `DELETE /roster/coach/:id`                                         | 204 No Content                                                                                              |
 
 > **Important:** The athlete and coach lists use Spring HATEOAS (`PagedModel`). Their JSON shape has `_embedded.content` for the items array and a `page` object for pagination metadata. The college list uses plain Spring `Page<T>`, which puts `content` at the root alongside `totalPages`, `totalElements`, `size`, and `number`.
 
@@ -63,6 +65,8 @@ src/
       layout.tsx
       page.tsx              # Coaches list (paginated, sorted by lastName/firstName)
       page.test.tsx         # Coaches list tests
+      [id]/page.tsx         # Coach detail + inline edit mode (coach info form, roster add/delete)
+      [id]/page.test.tsx    # Coach detail tests
   components/
     Header/index.tsx        # MUI AppBar navigation
     Pagination/index.tsx    # MUI Pagination wrapper
@@ -70,12 +74,13 @@ src/
   lib/
     api/
       athletes.ts           # Fetch functions for athlete endpoints (pure async, no React)
-      coaches.ts            # fetchCoaches — paginated coach list with optional q/seasonYear filters
+      coaches.ts            # fetchCoaches, fetchCoach, updateCoach, deleteCoach
       colleges.ts           # fetchColleges — fetches full college list for Autocomplete
-      roster.ts             # createRosterEntry (POST /roster/athlete), deleteRosterEntry (DELETE /roster/athlete/:id)
+      roster.ts             # createRosterEntry, deleteRosterEntry (athlete); createCoachRosterEntry, deleteCoachRosterEntry (coach)
     hooks/
       useAthlete.ts         # Hook wrapping fetchAthlete — returns { athlete, loading, error, refresh }
       useAthletes.ts        # Hook wrapping fetchAthletes — returns { athletes, totalPages, loading, error }
+      useCoach.ts           # Hook wrapping fetchCoach — returns { coach, loading, error, refresh }
       useCoaches.ts         # Hook wrapping fetchCoaches — returns { coaches, totalPages, loading, error }
       useColleges.ts        # Hook wrapping fetchColleges — returns { colleges, loading, error }; accepts enabled flag
     definitions.ts          # Shared TypeScript types for API responses

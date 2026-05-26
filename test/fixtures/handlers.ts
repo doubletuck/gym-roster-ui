@@ -118,6 +118,57 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
+  http.get(`${API_BASE_URL}/coach/:id`, () => {
+    return HttpResponse.json({
+      coachId: '1',
+      firstName: 'Alex',
+      lastName: 'Rivera',
+      rosters: [
+        {
+          coachRosterId: '101',
+          collegeCodeName: 'UCLA',
+          collegeShortName: 'UCLA',
+          collegeLongName: 'University of California, Los Angeles',
+          seasonYear: 2023,
+          roleCode: 'ASSISTANT_COACH',
+        },
+        {
+          coachRosterId: '102',
+          collegeCodeName: 'UCLA',
+          collegeShortName: 'UCLA',
+          collegeLongName: 'University of California, Los Angeles',
+          seasonYear: 2024,
+          roleCode: 'HEAD_COACH',
+        },
+      ],
+    });
+  }),
+
+  http.put(`${API_BASE_URL}/coach/:id`, () => {
+    return HttpResponse.json({ coachId: '1', firstName: 'Alex', lastName: 'Rivera', rosters: [] });
+  }),
+
+  http.delete(`${API_BASE_URL}/coach/:id`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(`${API_BASE_URL}/roster/coach`, () => {
+    return HttpResponse.json(
+      {
+        id: '999',
+        college: colleges[0],
+        seasonYear: 2025,
+        coach: { id: '1' },
+        roleCode: 'HEAD_COACH',
+      },
+      { status: 200 }
+    );
+  }),
+
+  http.delete(`${API_BASE_URL}/roster/coach/:id`, () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
   http.get(`${API_BASE_URL}/coach`, ({ request }) => {
     const url = new URL(request.url);
     const page = url.searchParams.get('page') || '0';

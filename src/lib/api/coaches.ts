@@ -1,4 +1,4 @@
-import { Coach, PaginatedResponse } from '@/lib/definitions';
+import { Coach, CoachUpdateRequest, PaginatedResponse } from '@/lib/definitions';
 
 export type CoachFilters = {
   q?: string;
@@ -19,4 +19,32 @@ export async function fetchCoaches(
     throw new Error('Failed to fetch coaches');
   }
   return response.json();
+}
+
+export async function fetchCoach(id: string): Promise<Coach> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/coach/${id}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch coach');
+  }
+  return response.json();
+}
+
+export async function updateCoach(id: string, data: CoachUpdateRequest): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/coach/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update coach');
+  }
+}
+
+export async function deleteCoach(id: string): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/coach/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete coach');
+  }
 }

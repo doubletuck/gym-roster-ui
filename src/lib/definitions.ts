@@ -16,6 +16,18 @@ export type Coach = {
   rosters: CoachRosterEntry[];
 };
 
+export type CoachUpdateRequest = {
+  firstName: string;
+  lastName: string;
+};
+
+export type CoachRosterRequest = {
+  college: { id: number };
+  seasonYear: number;
+  coach: { id: number };
+  roleCode: string;
+};
+
 export type AthleteRosterEntry = {
   athleteRosterId: string;
   collegeCodeName: string;
