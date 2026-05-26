@@ -22,6 +22,7 @@ Frontend for the GymRoster application. Displays college women's gymnastics data
 | Athlete roster (delete) | `DELETE /roster/athlete/:id`                                       | 204 No Content                                                                                              |
 | Coach roster (create)   | `POST /roster/coach`                                               | Body: `CoachRosterRequest` — `{ college: {id}, seasonYear, coach: {id}, roleCode }`                         |
 | Coach roster (delete)   | `DELETE /roster/coach/:id`                                         | 204 No Content                                                                                              |
+| Staff roles (list)      | `GET /reference/staffrole`                                         | Returns `ReferenceItem[]`; response cached in memory for session lifetime                                   |
 
 > **Important:** The athlete and coach lists use Spring HATEOAS (`PagedModel`). Their JSON shape has `_embedded.content` for the items array and a `page` object for pagination metadata. The college list uses plain Spring `Page<T>`, which puts `content` at the root alongside `totalPages`, `totalElements`, `size`, and `number`.
 
@@ -40,6 +41,8 @@ Both athlete endpoints return `AthleteDto`, which includes a `rosters` array of 
 **Coach** (`CoachResponse`): `coachId`, `firstName`, `lastName`, `creationTimestamp`, `lastUpdateTimestamp`, `rosters` (array of `CoachRosterEntry`)
 
 **CoachRosterEntry**: `coachRosterId`, `collegeCodeName`, `collegeShortName`, `collegeLongName`, `seasonYear` (number), `roleCode` (e.g. `HEAD_COACH`, `ASSISTANT_COACH`)
+
+**ReferenceItem**: `codeName` (enum constant), `longName` (human-readable display name) — used for staff roles and any future reference endpoints
 
 ## Tech Stack
 
@@ -76,12 +79,14 @@ src/
       athletes.ts           # Fetch functions for athlete endpoints (pure async, no React)
       coaches.ts            # fetchCoaches, fetchCoach, updateCoach, deleteCoach
       colleges.ts           # fetchColleges — fetches full college list for Autocomplete
+      reference.ts          # fetchStaffRoles — GET /reference/staffrole; result cached in module scope
       roster.ts             # createRosterEntry, deleteRosterEntry (athlete); createCoachRosterEntry, deleteCoachRosterEntry (coach)
     hooks/
       useAthlete.ts         # Hook wrapping fetchAthlete — returns { athlete, loading, error, refresh }
       useAthletes.ts        # Hook wrapping fetchAthletes — returns { athletes, totalPages, loading, error }
       useCoach.ts           # Hook wrapping fetchCoach — returns { coach, loading, error, refresh }
       useCoaches.ts         # Hook wrapping fetchCoaches — returns { coaches, totalPages, loading, error }
+      useStaffRoles.ts      # Hook wrapping fetchStaffRoles — returns { staffRoles, loading, error }
       useColleges.ts        # Hook wrapping fetchColleges — returns { colleges, loading, error }; accepts enabled flag
     definitions.ts          # Shared TypeScript types for API responses
 test/

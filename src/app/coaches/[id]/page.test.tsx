@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { server } from '@test/fixtures/server';
+import { resetStaffRolesCache } from '@/lib/api/reference';
 import CoachDetail from './page';
 
 let mockPush: ReturnType<typeof vi.fn>;
@@ -15,6 +16,7 @@ describe('Coach Detail Page', () => {
   beforeEach(() => {
     process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL = 'http://localhost:3000';
     mockPush = vi.fn();
+    resetStaffRolesCache();
   });
 
   it('should fetch and display coach details', async () => {

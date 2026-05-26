@@ -35,17 +35,8 @@ import { updateCoach, deleteCoach } from '@/lib/api/coaches';
 import { createCoachRosterEntry, deleteCoachRosterEntry } from '@/lib/api/roster';
 import { useCoach } from '@/lib/hooks/useCoach';
 import { useColleges } from '@/lib/hooks/useColleges';
+import { useStaffRoles } from '@/lib/hooks/useStaffRoles';
 import { College } from '@/lib/definitions';
-
-const ROLE_OPTIONS = [
-  { label: 'Head Coach', value: 'HEAD_COACH' },
-  { label: 'Assistant Coach', value: 'ASSISTANT_COACH' },
-];
-
-const ROLE_LABELS: Record<string, string> = {
-  HEAD_COACH: 'Head Coach',
-  ASSISTANT_COACH: 'Assistant Coach',
-};
 
 const collegeFilterOptions = createFilterOptions<College>({
   stringify: option => `${option.shortName} ${option.longName} ${option.codeName}`,
@@ -81,6 +72,7 @@ export default function CoachDetail() {
   const [rosterAddError, setRosterAddError] = useState<string | null>(null);
 
   const { colleges, loading: collegesLoading } = useColleges(editMode);
+  const { staffRoles } = useStaffRoles();
 
   const showSnackbar = (message: string, severity: 'success' | 'error') =>
     setSnackbar({ open: true, message, severity });
@@ -267,7 +259,10 @@ export default function CoachDetail() {
                 <TableRow key={roster.coachRosterId}>
                   <TableCell>{roster.seasonYear}</TableCell>
                   <TableCell>{roster.collegeShortName}</TableCell>
-                  <TableCell>{ROLE_LABELS[roster.roleCode] ?? roster.roleCode}</TableCell>
+                  <TableCell>
+                    {staffRoles.find(r => r.codeName === roster.roleCode)?.longName ??
+                      roster.roleCode}
+                  </TableCell>
                   {editMode && (
                     <TableCell>
                       <IconButton
@@ -325,9 +320,9 @@ export default function CoachDetail() {
                     onChange={e => setRosterForm({ ...rosterForm, roleCode: e.target.value })}
                     label="Role"
                   >
-                    {ROLE_OPTIONS.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>
-                        {opt.label}
+                    {staffRoles.map(role => (
+                      <MenuItem key={role.codeName} value={role.codeName}>
+                        {role.longName}
                       </MenuItem>
                     ))}
                   </Select>

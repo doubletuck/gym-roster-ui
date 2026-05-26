@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { coaches, colleges } from './mock-data';
+import { coaches, colleges, staffRoles } from './mock-data';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL || 'http://localhost:3000';
 
@@ -116,6 +116,10 @@ export const handlers = [
 
   http.delete(`${API_BASE_URL}/athlete/:id`, () => {
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.get(`${API_BASE_URL}/reference/staffrole`, () => {
+    return HttpResponse.json(staffRoles);
   }),
 
   http.get(`${API_BASE_URL}/coach/:id`, () => {

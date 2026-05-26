@@ -1,3 +1,8 @@
+export type ReferenceItem = {
+  codeName: string;
+  longName: string;
+};
+
 export type CoachRosterEntry = {
   coachRosterId: string;
   collegeCodeName: string;

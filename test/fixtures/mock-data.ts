@@ -1,3 +1,8 @@
+export const staffRoles = [
+  { codeName: 'HEAD_COACH', longName: 'Head Coach' },
+  { codeName: 'ASSISTANT_COACH', longName: 'Assistant Coach' },
+];
+
 export const coaches = [
   {
     coachId: '1',
