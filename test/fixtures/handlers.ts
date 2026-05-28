@@ -79,6 +79,14 @@ export const handlers = [
     });
   }),
 
+  http.post(`${API_BASE_URL}/athlete`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json(
+      { id: 99, ...body, creationTimestamp: '2024-01-01T00:00:00Z' },
+      { status: 201 }
+    );
+  }),
+
   http.get(`${API_BASE_URL}/athlete/:id`, () => {
     return HttpResponse.json(mockAthlete);
   }),

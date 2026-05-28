@@ -121,4 +121,58 @@ describe('Athletes Page', () => {
 
     expect(mockPush).toHaveBeenCalledWith('/athletes?seasonYear=2024&page=1');
   });
+
+  describe('Add Athlete dialog', () => {
+    it('should open dialog when Add Athlete is clicked', () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add athlete/i }));
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/home city/i)).toBeInTheDocument();
+    });
+
+    it('should show validation error when required fields are empty', () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add athlete/i }));
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      expect(
+        screen.getByText('First name, last name, and home city are required')
+      ).toBeInTheDocument();
+    });
+
+    it('should navigate to new athlete detail page on success', async () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add athlete/i }));
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'Jordan' } });
+      fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Smith' } });
+      fireEvent.change(screen.getByLabelText(/home city/i), { target: { value: 'Austin' } });
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/athletes/99');
+      });
+    });
+
+    it('should show error when create request fails', async () => {
+      server.use(http.post('http://localhost:3000/athlete', () => HttpResponse.error()));
+
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add athlete/i }));
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'Jordan' } });
+      fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Smith' } });
+      fireEvent.change(screen.getByLabelText(/home city/i), { target: { value: 'Austin' } });
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Failed to create athlete')).toBeInTheDocument();
+      });
+    });
+  });
 });

@@ -29,6 +29,18 @@ export async function fetchAthlete(id: string): Promise<Athlete> {
   return response.json();
 }
 
+export async function createAthlete(data: AthleteUpdateRequest): Promise<{ id: number }> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create athlete');
+  }
+  return response.json();
+}
+
 export async function updateAthlete(id: string, data: AthleteUpdateRequest): Promise<void> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/athlete/${id}`, {
     method: 'PUT',
