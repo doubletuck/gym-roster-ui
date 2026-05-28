@@ -117,4 +117,83 @@ describe('Coaches Page', () => {
 
     expect(mockPush).toHaveBeenCalledWith('/coaches?seasonYear=2024&page=1');
   });
+
+  describe('Add Coach', () => {
+    it('should always show Add Coach button', () => {
+      render(<Page />);
+
+      expect(screen.getByRole('button', { name: /add coach/i })).toBeInTheDocument();
+    });
+
+    it('should open dialog when Add Coach is clicked', () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add coach/i }));
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
+    });
+
+    it('should close dialog when Cancel is clicked', async () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add coach/i }));
+      fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
+      // MUI Dialog uses a CSS transition on exit; wait for it to fully unmount
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    });
+
+    it('should show validation error when fields are empty', async () => {
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add coach/i }));
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('First name and last name are required')).toBeInTheDocument();
+      });
+    });
+
+    it('should call POST /coach and navigate to new coach on success', async () => {
+      let postBody: unknown;
+      server.use(
+        http.post('http://localhost:3000/coach', async ({ request }) => {
+          postBody = await request.json();
+          return HttpResponse.json(
+            { id: 10, firstName: 'Jane', lastName: 'Smith' },
+            { status: 201 }
+          );
+        })
+      );
+
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add coach/i }));
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'Jane' } });
+      fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Smith' } });
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      await waitFor(() => {
+        expect(postBody).toMatchObject({ firstName: 'Jane', lastName: 'Smith' });
+        expect(mockPush).toHaveBeenCalledWith('/coaches/10');
+      });
+    });
+
+    it('should show error when POST /coach fails', async () => {
+      server.use(http.post('http://localhost:3000/coach', () => HttpResponse.error()));
+
+      render(<Page />);
+
+      fireEvent.click(screen.getByRole('button', { name: /add coach/i }));
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'Jane' } });
+      fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Smith' } });
+      fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Failed to create coach')).toBeInTheDocument();
+      });
+    });
+  });
 });

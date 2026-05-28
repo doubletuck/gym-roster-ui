@@ -29,6 +29,18 @@ export async function fetchCoach(id: string): Promise<Coach> {
   return response.json();
 }
 
+export async function createCoach(data: CoachUpdateRequest): Promise<{ id: number }> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/coach`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create coach');
+  }
+  return response.json();
+}
+
 export async function updateCoach(id: string, data: CoachUpdateRequest): Promise<void> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_GYMROSTER_API_BASE_URL}/coach/${id}`, {
     method: 'PUT',

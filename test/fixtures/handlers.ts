@@ -122,6 +122,10 @@ export const handlers = [
     return HttpResponse.json(staffRoles);
   }),
 
+  http.post(`${API_BASE_URL}/coach`, () => {
+    return HttpResponse.json({ id: 10, firstName: 'New', lastName: 'Coach' }, { status: 201 });
+  }),
+
   http.get(`${API_BASE_URL}/coach/:id`, () => {
     return HttpResponse.json({
       coachId: '1',

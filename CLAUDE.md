@@ -14,10 +14,14 @@ Frontend for the GymRoster application. Displays college women's gymnastics data
 | Athletes (list)         | `GET /athlete?page=0&size=30&sort=lastName,asc&sort=firstName,asc` | Spring HATEOAS `PagedModel`                                                                                 |
 | Athlete (detail)        | `GET /athlete/:id`                                                 | —                                                                                                           |
 | Athlete (update)        | `PUT /athlete/:id`                                                 | Body: `AthleteUpdateRequest`; returns updated athlete without `rosters`                                     |
+| Athlete (delete)        | `DELETE /athlete/:id`                                              | 204 No Content                                                                                              |
 | Colleges (list)         | `GET /college?page=0&size=300&sort=shortName,asc`                  | Spring `Page<T>`; fetched in bulk for college Autocomplete                                                  |
 | College (detail)        | `GET /college/:id`                                                 | —                                                                                                           |
 | Coaches (list)          | `GET /coach?page=0&size=10&sort=lastName,asc&sort=firstName,asc`   | Spring HATEOAS `PagedModel`; supports `q`, `firstName`, `lastName`, `collegeCodeName`, `seasonYear` filters |
 | Coach (detail)          | `GET /coach/:id`                                                   | —                                                                                                           |
+| Coach (create)          | `POST /coach`                                                      | Body: `CoachUpdateRequest`; returns `{ id }` of the new coach                                               |
+| Coach (update)          | `PUT /coach/:id`                                                   | Body: `CoachUpdateRequest`; returns updated coach                                                           |
+| Coach (delete)          | `DELETE /coach/:id`                                                | 204 No Content                                                                                              |
 | Athlete roster (create) | `POST /roster/athlete`                                             | Body: `AthleteRosterRequest`; `academicYear` uses long enum codes (e.g. `FRESHMAN`)                         |
 | Athlete roster (delete) | `DELETE /roster/athlete/:id`                                       | 204 No Content                                                                                              |
 | Coach roster (create)   | `POST /roster/coach`                                               | Body: `CoachRosterRequest` — `{ college: {id}, seasonYear, coach: {id}, roleCode }`                         |
@@ -77,7 +81,7 @@ src/
   lib/
     api/
       athletes.ts           # Fetch functions for athlete endpoints (pure async, no React)
-      coaches.ts            # fetchCoaches, fetchCoach, updateCoach, deleteCoach
+      coaches.ts            # fetchCoaches, fetchCoach, createCoach, updateCoach, deleteCoach
       colleges.ts           # fetchColleges — fetches full college list for Autocomplete
       reference.ts          # fetchStaffRoles — GET /reference/staffrole; result cached in module scope
       roster.ts             # createRosterEntry, deleteRosterEntry (athlete); createCoachRosterEntry, deleteCoachRosterEntry (coach)

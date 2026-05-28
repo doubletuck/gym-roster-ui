@@ -2,10 +2,16 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import MuiLink from '@mui/material/Link';
 import Link from 'next/link';
 import Pagination from '@/components/Pagination';
+import { createCoach } from '@/lib/api/coaches';
 import { useCoaches } from '@/lib/hooks/useCoaches';
 
 const PAGE_SIZE = 10;
@@ -32,6 +39,11 @@ function CoachesPage() {
 
   const [q, setQ] = useState(qParam);
   const [seasonYear, setSeasonYear] = useState(seasonYearParam);
+
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [addForm, setAddForm] = useState({ firstName: '', lastName: '' });
+  const [addSaving, setAddSaving] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
 
   useEffect(() => {
     setQ(qParam);
@@ -66,11 +78,41 @@ function CoachesPage() {
     if (e.key === 'Enter') handleSearch();
   };
 
+  const handleOpenAddDialog = () => {
+    setAddForm({ firstName: '', lastName: '' });
+    setAddError(null);
+    setAddDialogOpen(true);
+  };
+
+  const handleAddCoach = async () => {
+    if (!addForm.firstName.trim() || !addForm.lastName.trim()) {
+      setAddError('First name and last name are required');
+      return;
+    }
+    setAddSaving(true);
+    setAddError(null);
+    try {
+      const newCoach = await createCoach({
+        firstName: addForm.firstName.trim(),
+        lastName: addForm.lastName.trim(),
+      });
+      router.push(`/coaches/${newCoach.id}`);
+    } catch {
+      setAddError('Failed to create coach');
+      setAddSaving(false);
+    }
+  };
+
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Coaches
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h4" component="h1">
+          Coaches
+        </Typography>
+        <Button variant="contained" onClick={handleOpenAddDialog}>
+          Add Coach
+        </Button>
+      </Box>
 
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'flex-end' }}>
@@ -141,7 +183,7 @@ function CoachesPage() {
                   <TableCell>
                     {[
                       ...new Map(
-                        coach.rosters.map(r => [r.collegeCodeName, r.collegeShortName])
+                        (coach.rosters ?? []).map(r => [r.collegeCodeName, r.collegeShortName])
                       ).values(),
                     ].join(', ')}
                   </TableCell>
@@ -151,6 +193,44 @@ function CoachesPage() {
           </Table>
         </>
       )}
+
+      <Dialog
+        open={addDialogOpen}
+        onClose={() => !addSaving && setAddDialogOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Add Coach</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField
+              label="First Name"
+              value={addForm.firstName}
+              onChange={e => setAddForm({ ...addForm, firstName: e.target.value })}
+              required
+              fullWidth
+              slotProps={{ htmlInput: { maxLength: 40 } }}
+            />
+            <TextField
+              label="Last Name"
+              value={addForm.lastName}
+              onChange={e => setAddForm({ ...addForm, lastName: e.target.value })}
+              required
+              fullWidth
+              slotProps={{ htmlInput: { maxLength: 40 } }}
+            />
+            {addError && <Alert severity="error">{addError}</Alert>}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAddDialogOpen(false)} disabled={addSaving}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleAddCoach} disabled={addSaving}>
+            {addSaving ? 'Saving...' : 'Add'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
