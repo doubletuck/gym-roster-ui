@@ -8,6 +8,10 @@ This project uses `pnpm` as the package manager to take advantage of improved pe
 pnpm install
 ```
 
+## Start the backend server
+
+This front-end interface relies on being able to make API calls to the gym-roster backend service. See the gym-roster's [development-run.md](https://github.com/doubletuck/gym-roster/blob/main/docs/development-run.md) documentation for starting the service.
+
 ## Start the server
 
 ```shell
