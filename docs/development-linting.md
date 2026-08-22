@@ -12,7 +12,7 @@ The [.prettierignore](../.prettierignore) file lists the files and file patterns
 
 ### ESLint configuration
 
-The [.eslintrc.js](../.eslintrc.js) file ensures that Prettier formatting is enforced as an ESLint rule.
+The [eslint.config.mjs](../eslint.config.mjs) file (flat config) ensures that Prettier formatting is enforced as an ESLint rule. Run it via `pnpm lint`, which invokes `eslint .` directly — `next lint` was removed in Next.js 16.3.
 
 ### Enable auto format in VSCode
 

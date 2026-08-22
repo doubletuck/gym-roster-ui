@@ -35,8 +35,10 @@ brew install fnm
 #### Add fnm to your ~/.zshrc
 
 ```
-eval "$(fnm env)"
+eval "$(fnm env --use-on-cd)"
 ```
+
+Note: The `--use-on-cd` will allow fnm to automatically activate the right Node version whenever you `cd` into a project directory.
 
 #### Reload your shell
 
@@ -47,13 +49,13 @@ source ~/.zshrc
 #### Install Node via fnm
 
 ```shell
-fnm install 24.12.0
+fnm install 24.19.0
 ```
 
 ## Create `.node-version` file
 
 ```shell
-echo "24.12.0" > .node-version
+echo "24.19.0" > .node-version
 ```
 
 ## Install pnpm
@@ -62,5 +64,15 @@ Next.js recommends using pnpm as the package manager because it is faster and mo
 
 ```shell
 corepack enable
-corepack prepare pnpm@10.27.0 --activate
+corepack prepare pnpm@11.22.0 --activate
+```
+
+## Local environment file setup
+
+In the root directory, create a file called `.env.local` if it does not exist. This file will contain environment properties needed to run the application.
+
+Add the API base URL to the backend serving the API.
+
+```text
+NEXT_PUBLIC_GYMROSTER_API_BASE_URL="http://localhost:8080"
 ```

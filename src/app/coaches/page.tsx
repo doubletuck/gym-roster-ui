@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -40,15 +40,20 @@ function CoachesPage() {
   const [q, setQ] = useState(qParam);
   const [seasonYear, setSeasonYear] = useState(seasonYearParam);
 
+  // Reset form fields when the URL changes externally (e.g. browser back/forward).
+  const [prevQParam, setPrevQParam] = useState(qParam);
+  const [prevSeasonYearParam, setPrevSeasonYearParam] = useState(seasonYearParam);
+  if (qParam !== prevQParam || seasonYearParam !== prevSeasonYearParam) {
+    setPrevQParam(qParam);
+    setPrevSeasonYearParam(seasonYearParam);
+    setQ(qParam);
+    setSeasonYear(seasonYearParam);
+  }
+
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [addForm, setAddForm] = useState({ firstName: '', lastName: '' });
   const [addSaving, setAddSaving] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setQ(qParam);
-    setSeasonYear(seasonYearParam);
-  }, [qParam, seasonYearParam]);
 
   const { coaches, totalPages, loading, error } = useCoaches(
     currentPage,
